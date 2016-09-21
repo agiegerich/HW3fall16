@@ -21,6 +21,9 @@ GEM
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
+    nokogiri (1.6.8-x64-mingw32)
+      mini_portile2 (~> 2.1.0)
+      pkg-config (~> 1.1.7)
     pkg-config (1.1.7)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
@@ -48,6 +51,7 @@ GEM
 
 PLATFORMS
   ruby
+  x64-mingw32
 
 DEPENDENCIES
   activemodel (= 4.2.4)
@@ -63,4 +67,4 @@ RUBY VERSION
    ruby 2.3.0p0
 
 BUNDLED WITH
-   1.12.5
+   1.13.1

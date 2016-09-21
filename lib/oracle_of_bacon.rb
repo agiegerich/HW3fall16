@@ -20,13 +20,15 @@ class OracleOfBacon
   validate :from_does_not_equal_to
 
    def from_does_not_equal_to
-#    if @from == @to
-#      self.errors.add(:from, 'cannot be the same as To')
-#    end
+    if @from == @to
+      self.errors.add(:from, 'cannot be the same as To')
+    end
   end
 
   def initialize(api_key='')
-    # your code here
+    @api_key = api_key
+    @from = 'Kevin Bacon'
+    @to = 'Kevin Bacon'
   end
 
   def find_connections
@@ -42,14 +44,18 @@ class OracleOfBacon
       # convert all of these into a generic OracleOfBacon::NetworkError,
       #  but keep the original error message
       # your code here
+      raise NetworkError.new
     end
     # your code here: create the OracleOfBacon::Response object
+    return OracleOfBacon::Response.new xml
   end
 
   def make_uri_from_arguments
     # your code here: set the @uri attribute to properly-escaped URI
     # constructed from the @from, @to, @api_key arguments
+    @uri = 'http://oracleofbacon.org/cgi-bin/xml?p='+CGI.escape(@api_key)+'&a='+CGI.escape(@to)+'&b='+CGI.escape(@from)
   end
+
       
   class Response
     attr_reader :type, :data
@@ -60,9 +66,9 @@ class OracleOfBacon
     end
 
     private
-
     def parse_response
-      if ! @doc.xpath('/error').empty?
+
+    if ! @doc.xpath('/error').empty?
         parse_error_response
       elsif ! @doc.xpath('/spellcheck').empty?
         parse_spellcheck_response
@@ -74,8 +80,9 @@ class OracleOfBacon
     end
 
     def parse_error_response
-     #Your code here.  Assign @type and @data
-     # based on type attribute and body of the error element
+      @data = @doc.xpath('/error')[0].text
+      @type = @doc.xpath('/error')[0].attr('type').to_sym
+      # 38b99ce9ec87
     end
 
     def parse_spellcheck_response
@@ -85,12 +92,13 @@ class OracleOfBacon
     end
 
     def parse_graph_response
-      #Your code here
+      @type = :graph
+      @data = @doc.xpath('//actor|//movie').map(&:text)
     end
 
     def parse_unknown_response
       @type = :unknown
-      @data = 'Unknown response type'
+      @data = 'unknown response'
     end
   end
 end
